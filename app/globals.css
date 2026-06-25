@@ -3,25 +3,86 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0a0b0d;
+  --foreground: #f4f3ef;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-image: radial-gradient(circle at 15% 0%, rgba(143, 180, 194, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 10%, rgba(243, 174, 203, 0.06), transparent 40%);
+  background-attachment: fixed;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-glass;
+  }
+
+  .section-header {
+    @apply border-l-2 border-pink/60 pl-3 font-serif text-lg tracking-tight text-ink;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-ink placeholder:text-ink-faint outline-none transition focus:border-ice/50 focus:bg-white/[0.06];
+  }
+}
+
+/* checkbox custom styling shared by Toggle component */
+input[type="checkbox"].dash-checkbox {
+  appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+input[type="checkbox"].dash-checkbox:hover {
+  border-color: rgba(243, 174, 203, 0.5);
+}
+
+input[type="checkbox"].dash-checkbox:checked {
+  background: #f3aecb;
+  border-color: #f3aecb;
+}
+
+input[type="checkbox"].dash-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.32rem;
+  top: 0.12rem;
+  width: 0.3rem;
+  height: 0.55rem;
+  border: solid #13151a;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
