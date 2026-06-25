@@ -32,7 +32,7 @@ export function TabNav() {
                 key={tab.href}
                 href={tab.href}
                 className={`rounded-lg px-3 py-1.5 text-sm transition-colors duration-150 ${
-                  active ? "bg-pink/15 text-pink" : "text-ink-dim hover:bg-white/[0.06] hover:text-ink"
+                  active ? "bg-sage/15 text-sage" : "text-ink-dim hover:bg-white/[0.06] hover:text-ink"
                 }`}
               >
                 {tab.label}

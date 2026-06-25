@@ -27,7 +27,7 @@ export function ConsistencyChart({
             <div key={key} className="group relative flex flex-1 flex-col items-center justify-end gap-1">
               <div
                 className={`w-full rounded-t-sm transition-all duration-300 ${
-                  met ? "bg-pink/80" : sessions > 0 ? "bg-ice/60" : "bg-white/[0.06]"
+                  met ? "bg-sage/80" : sessions > 0 ? "bg-ice/60" : "bg-white/[0.06]"
                 }`}
                 style={{ height: `${heightPercent}%` }}
               />

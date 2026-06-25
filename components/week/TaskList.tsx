@@ -9,22 +9,28 @@ import { newId } from "@/lib/id";
 import { useConfetti } from "./useConfetti";
 import { usePopSound } from "./usePopSound";
 
+const STAR_COLOR = "#f0c98a";
+
 export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks: Task[]) => void }) {
   const [newTask, setNewTask] = useState("");
+  const [subtaskDrafts, setSubtaskDrafts] = useState<Record<string, string>>({});
   const fireConfetti = useConfetti();
   const playPop = usePopSound();
   const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   function addTask() {
     if (!newTask.trim()) return;
-    onChange([...tasks, { id: newId(), text: newTask.trim(), done: false }]);
+    onChange([...tasks, { id: newId(), text: newTask.trim(), done: false, starred: false, subtasks: [] }]);
     setNewTask("");
+  }
+
+  function updateTask(id: string, patch: Partial<Task>) {
+    onChange(tasks.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   }
 
   function toggleTask(id: string) {
     const task = tasks.find((t) => t.id === id);
-    const next = tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
-    onChange(next);
+    updateTask(id, { done: !task?.done });
     if (task && !task.done) {
       fireConfetti(rowRefs.current[id]);
       playPop();
@@ -35,36 +41,113 @@ export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks:
     onChange(tasks.filter((t) => t.id !== id));
   }
 
+  function addSubtask(taskId: string) {
+    const text = (subtaskDrafts[taskId] ?? "").trim();
+    if (!text) return;
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    updateTask(taskId, { subtasks: [...task.subtasks, { id: newId(), text, done: false }] });
+    setSubtaskDrafts((prev) => ({ ...prev, [taskId]: "" }));
+  }
+
+  function toggleSubtask(taskId: string, subtaskId: string) {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    updateTask(taskId, {
+      subtasks: task.subtasks.map((s) => (s.id === subtaskId ? { ...s, done: !s.done } : s)),
+    });
+  }
+
+  function deleteSubtask(taskId: string, subtaskId: string) {
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    updateTask(taskId, { subtasks: task.subtasks.filter((s) => s.id !== subtaskId) });
+  }
+
   const remaining = tasks.filter((t) => !t.done).length;
+  const sortedTasks = [...tasks].sort((a, b) => Number(b.starred) - Number(a.starred));
 
   return (
     <Card>
       <SectionHeader subtitle={`${remaining} of ${tasks.length} remaining`}>Tasks</SectionHeader>
       <div className="space-y-1.5">
-        {tasks.map((task) => (
+        {sortedTasks.map((task) => (
           <div
             key={task.id}
             ref={(el) => {
               rowRefs.current[task.id] = el;
             }}
-            className="group flex items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-white/[0.03]"
+            className={`group rounded-lg px-2 py-2 transition-colors hover:bg-white/[0.03] ${
+              task.starred ? "border-l-2 bg-white/[0.02]" : ""
+            }`}
+            style={task.starred ? { borderColor: `${STAR_COLOR}99` } : undefined}
           >
-            <input
-              type="checkbox"
-              className="dash-checkbox"
-              checked={task.done}
-              onChange={() => toggleTask(task.id)}
-            />
-            <span className={`flex-1 text-sm ${task.done ? "text-ink-faint line-through" : "text-ink"}`}>
-              {task.text}
-            </span>
-            <button
-              aria-label="Delete task"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
-              onClick={() => deleteTask(task.id)}
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                aria-label={task.starred ? "Unstar task" : "Star task"}
+                className={`text-sm transition-opacity ${
+                  task.starred ? "opacity-100" : "text-ink-faint opacity-0 group-hover:opacity-100"
+                }`}
+                style={task.starred ? { color: STAR_COLOR } : undefined}
+                onClick={() => updateTask(task.id, { starred: !task.starred })}
+              >
+                {task.starred ? "★" : "☆"}
+              </button>
+              <input
+                type="checkbox"
+                className="dash-checkbox"
+                checked={task.done}
+                onChange={() => toggleTask(task.id)}
+              />
+              <span className={`flex-1 text-sm ${task.done ? "text-ink-faint line-through" : "text-ink"}`}>
+                {task.text}
+              </span>
+              <button
+                aria-label="Delete task"
+                className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
+                onClick={() => deleteTask(task.id)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="ml-9 mt-1 space-y-1">
+              {task.subtasks.map((sub) => (
+                <div key={sub.id} className="group/sub flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="dash-checkbox"
+                    checked={sub.done}
+                    onChange={() => toggleSubtask(task.id, sub.id)}
+                  />
+                  <span className={`flex-1 text-xs ${sub.done ? "text-ink-faint line-through" : "text-ink-dim"}`}>
+                    {sub.text}
+                  </span>
+                  <button
+                    aria-label="Delete subtask"
+                    className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover/sub:opacity-100"
+                    onClick={() => deleteSubtask(task.id, sub.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <form
+                className="flex items-center gap-2 pt-0.5"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addSubtask(task.id);
+                }}
+              >
+                <span className="text-xs text-ink-faint">+</span>
+                <input
+                  className="flex-1 border-none bg-transparent py-0.5 text-xs text-ink placeholder:text-ink-faint outline-none"
+                  placeholder="Add a subtask"
+                  value={subtaskDrafts[task.id] ?? ""}
+                  onChange={(e) => setSubtaskDrafts((prev) => ({ ...prev, [task.id]: e.target.value }))}
+                />
+              </form>
+            </div>
           </div>
         ))}
         {tasks.length === 0 && <p className="py-4 text-center text-sm text-ink-faint">No tasks yet — add one below.</p>}

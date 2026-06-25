@@ -10,7 +10,7 @@ import { newId } from "@/lib/id";
 
 const PLATFORMS: ContentPlatform[] = ["TikTok", "Instagram", "YouTube"];
 const PRIORITIES: Priority[] = ["low", "medium", "high"];
-const PRIORITY_TONE: Record<Priority, "grey" | "ice" | "pink"> = { low: "grey", medium: "ice", high: "pink" };
+const PRIORITY_TONE: Record<Priority, "grey" | "ice" | "sage"> = { low: "grey", medium: "ice", high: "sage" };
 const PRIORITY_RANK: Record<Priority, number> = { high: 0, medium: 1, low: 2 };
 
 export function IdeasPipeline({
@@ -41,7 +41,7 @@ export function IdeasPipeline({
             <Badge tone={PRIORITY_TONE[idea.priority]}>{idea.priority}</Badge>
             <button
               aria-label="Remove idea"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(ideas.filter((x) => x.id !== idea.id))}
             >
               ✕

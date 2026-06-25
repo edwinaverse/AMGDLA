@@ -26,7 +26,7 @@ export function BucketListItemRow({
       </span>
       <button
         aria-label="Remove item"
-        className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+        className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
         onClick={onDelete}
       >
         ✕

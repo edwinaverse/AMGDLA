@@ -54,7 +54,7 @@ export function DegreeProgress({
             <span className="w-12 text-right text-xs text-ink-faint">{c.credits} cr</span>
             <button
               aria-label="Remove course"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(courses.filter((x) => x.id !== c.id))}
             >
               ✕

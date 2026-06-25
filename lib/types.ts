@@ -1,9 +1,17 @@
 export type Id = string;
 
+export interface Subtask {
+  id: Id;
+  text: string;
+  done: boolean;
+}
+
 export interface Task {
   id: Id;
   text: string;
   done: boolean;
+  starred: boolean;
+  subtasks: Subtask[];
 }
 
 export interface WeekFocus {

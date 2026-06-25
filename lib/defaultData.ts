@@ -1,4 +1,4 @@
-import { DashboardData, DegreeCourse } from "./types";
+import { DashboardData, DegreeCourse, Task, WeekEntry } from "./types";
 
 /**
  * Best-effort starter list for the MS CS (NLP concentration) degree progress view.
@@ -57,12 +57,33 @@ export function createDefaultData(): DashboardData {
   };
 }
 
+/** Backfills fields added to Task after some weeks were already saved (starred, subtasks). */
+function normalizeTask(task: Partial<Task>): Task {
+  return {
+    id: task.id ?? "",
+    text: task.text ?? "",
+    done: task.done ?? false,
+    starred: task.starred ?? false,
+    subtasks: task.subtasks ?? [],
+  };
+}
+
+function normalizeWeeks(weeks: Record<string, WeekEntry> | undefined): Record<string, WeekEntry> {
+  if (!weeks) return {};
+  return Object.fromEntries(
+    Object.entries(weeks).map(([weekKey, week]) => [
+      weekKey,
+      { ...week, tasks: (week.tasks ?? []).map(normalizeTask) },
+    ])
+  );
+}
+
 /** Fills in any keys missing from older saved blobs without overwriting existing data. */
 export function withDefaults(data: Partial<DashboardData> | null | undefined): DashboardData {
   const base = createDefaultData();
   if (!data) return base;
   return {
-    weeks: data.weeks ?? base.weeks,
+    weeks: normalizeWeeks(data.weeks),
     gym: {
       weeklyGoal: data.gym?.weeklyGoal ?? base.gym.weeklyGoal,
       weeks: data.gym?.weeks ?? base.gym.weeks,

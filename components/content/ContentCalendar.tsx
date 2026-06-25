@@ -13,13 +13,13 @@ const PLATFORMS: ContentPlatform[] = ["TikTok", "Instagram", "YouTube"];
 const TYPES: ContentType[] = ["video", "reel", "photo", "vlog"];
 const STATUSES: ContentStatus[] = ["idea", "in progress", "filmed", "editing", "scheduled", "posted"];
 
-const STATUS_TONE: Record<ContentStatus, "pink" | "ice" | "grey" | "neutral"> = {
+const STATUS_TONE: Record<ContentStatus, "sage" | "ice" | "grey" | "neutral"> = {
   idea: "neutral",
   "in progress": "grey",
   filmed: "ice",
   editing: "ice",
-  scheduled: "pink",
-  posted: "pink",
+  scheduled: "sage",
+  posted: "sage",
 };
 
 export function ContentCalendar({
@@ -71,7 +71,7 @@ export function ContentCalendar({
             <Badge tone={STATUS_TONE[item.status]}>{item.status}</Badge>
             <button
               aria-label="Remove calendar item"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(items.filter((x) => x.id !== item.id))}
             >
               ✕

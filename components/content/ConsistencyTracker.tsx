@@ -48,7 +48,7 @@ export function ConsistencyTracker({
                     −
                   </button>
                   <button
-                    className="rounded-md bg-pink/90 px-2 py-0.5 text-xs text-surface hover:bg-pink"
+                    className="rounded-md bg-sage/90 px-2 py-0.5 text-xs text-surface hover:bg-sage"
                     onClick={() => onChange(platform, { ...data, weeks: { ...data.weeks, [weekKey]: count + 1 } })}
                   >
                     + Post

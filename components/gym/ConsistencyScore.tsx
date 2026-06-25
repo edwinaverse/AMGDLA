@@ -25,7 +25,7 @@ export function ConsistencyScore({
       <div className="mb-4 flex items-end gap-3">
         <span className="font-serif text-4xl text-ink">{sessions}</span>
         <span className="pb-1 text-ink-dim">
-          / {goal} session{goal === 1 ? "" : "s"} {met && <span className="text-pink">✓ goal met</span>}
+          / {goal} session{goal === 1 ? "" : "s"} {met && <span className="text-sage">✓ goal met</span>}
         </span>
       </div>
       <ProgressBar percent={percent} />

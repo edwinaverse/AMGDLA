@@ -48,7 +48,7 @@ export function CoursesList({ courses, onChange }: { courses: Course[]; onChange
             />
             <button
               aria-label="Remove course"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(courses.filter((x) => x.id !== c.id))}
             >
               ✕

@@ -1,5 +1,5 @@
 const TONES: Record<string, string> = {
-  pink: "bg-pink/15 text-pink border-pink/30",
+  sage: "bg-sage/15 text-sage border-sage/30",
   ice: "bg-ice/15 text-ice border-ice/30",
   grey: "bg-grey/15 text-grey border-grey/30",
   neutral: "bg-white/[0.06] text-ink-dim border-white/10",

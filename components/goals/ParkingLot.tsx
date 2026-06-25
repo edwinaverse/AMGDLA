@@ -32,7 +32,7 @@ export function ParkingLot({
             <span className="flex-1 text-sm text-ink">{item.text}</span>
             <button
               aria-label="Remove idea"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(items.filter((x) => x.id !== item.id))}
             >
               ✕

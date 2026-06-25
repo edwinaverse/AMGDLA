@@ -11,7 +11,7 @@ body {
   color: var(--foreground);
   background: var(--background);
   background-image: radial-gradient(circle at 15% 0%, rgba(143, 180, 194, 0.08), transparent 45%),
-    radial-gradient(circle at 85% 10%, rgba(243, 174, 203, 0.06), transparent 40%);
+    radial-gradient(circle at 85% 10%, rgba(143, 191, 127, 0.06), transparent 40%);
   background-attachment: fixed;
   font-family: var(--font-sans), system-ui, sans-serif;
 }
@@ -28,7 +28,7 @@ body {
   }
 
   .section-header {
-    @apply border-l-2 border-pink/60 pl-3 font-serif text-lg tracking-tight text-ink;
+    @apply border-l-2 border-sage/60 pl-3 font-serif text-lg tracking-tight text-ink;
   }
 
   .input-field {
@@ -52,12 +52,12 @@ input[type="checkbox"].dash-checkbox {
 }
 
 input[type="checkbox"].dash-checkbox:hover {
-  border-color: rgba(243, 174, 203, 0.5);
+  border-color: rgba(143, 191, 127, 0.5);
 }
 
 input[type="checkbox"].dash-checkbox:checked {
-  background: #f3aecb;
-  border-color: #f3aecb;
+  background: #8fbf7f;
+  border-color: #8fbf7f;
 }
 
 input[type="checkbox"].dash-checkbox:checked::after {

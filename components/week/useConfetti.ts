@@ -21,7 +21,7 @@ export function useConfetti() {
       scalar: 0.8,
       ticks: 150,
       origin,
-      colors: ["#f3aecb", "#8fb4c2", "#c9cbd3", "#f4f3ef"],
+      colors: ["#8fbf7f", "#8fb4c2", "#c9cbd3", "#f4f3ef"],
     });
   }, []);
 }

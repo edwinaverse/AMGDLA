@@ -42,7 +42,7 @@ export function GoalCategory({
             </span>
             <button
               aria-label="Remove goal"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(goals.filter((x) => x.id !== g.id))}
             >
               ✕

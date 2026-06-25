@@ -10,11 +10,11 @@ import { newId } from "@/lib/id";
 import { todayIso } from "@/lib/weekUtils";
 
 const STATUSES: BrandDealStatus[] = ["negotiating", "confirmed", "delivered", "paid"];
-const STATUS_TONE: Record<BrandDealStatus, "grey" | "ice" | "pink"> = {
+const STATUS_TONE: Record<BrandDealStatus, "grey" | "ice" | "sage"> = {
   negotiating: "grey",
   confirmed: "ice",
   delivered: "ice",
-  paid: "pink",
+  paid: "sage",
 };
 
 export function BrandDeals({ deals, onChange }: { deals: BrandDeal[]; onChange: (deals: BrandDeal[]) => void }) {
@@ -67,7 +67,7 @@ export function BrandDeals({ deals, onChange }: { deals: BrandDeal[]; onChange: 
             <Badge tone={STATUS_TONE[d.status]}>{d.status}</Badge>
             <button
               aria-label="Remove deal"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(deals.filter((x) => x.id !== d.id))}
             >
               ✕

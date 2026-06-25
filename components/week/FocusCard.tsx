@@ -39,7 +39,7 @@ export function FocusCard({
             />
             <button
               aria-label="Remove sub-goal"
-              className="text-ink-faint transition-colors hover:text-pink"
+              className="text-ink-faint transition-colors hover:text-sage"
               onClick={() => onChange({ ...focus, subGoals: focus.subGoals.filter((_, idx) => idx !== i) })}
             >
               ✕

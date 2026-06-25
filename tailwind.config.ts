@@ -20,9 +20,9 @@ const config: Config = {
           dim: "#a8abb5",
           faint: "#6c707c",
         },
-        pink: {
-          DEFAULT: "#f3aecb",
-          dim: "#e08fb2",
+        sage: {
+          DEFAULT: "#8fbf7f",
+          dim: "#6fa868",
         },
         grey: {
           DEFAULT: "#c9cbd3",

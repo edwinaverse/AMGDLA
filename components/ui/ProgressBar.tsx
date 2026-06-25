@@ -3,7 +3,7 @@ export function ProgressBar({ percent }: { percent: number }) {
   return (
     <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.06]">
       <div
-        className="h-full rounded-full bg-gradient-to-r from-ice to-pink transition-all duration-500"
+        className="h-full rounded-full bg-gradient-to-r from-ice to-sage transition-all duration-500"
         style={{ width: `${clamped}%` }}
       />
     </div>

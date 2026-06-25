@@ -8,9 +8,9 @@ import { Badge } from "@/components/ui/Badge";
 import { Course, Deadline, DeadlineType } from "@/lib/types";
 import { newId } from "@/lib/id";
 
-const TYPE_TONE: Record<DeadlineType, "pink" | "ice" | "grey"> = {
+const TYPE_TONE: Record<DeadlineType, "sage" | "ice" | "grey"> = {
   assignment: "ice",
-  exam: "pink",
+  exam: "sage",
   project: "grey",
 };
 
@@ -58,7 +58,7 @@ export function DeadlinesList({
             <Badge tone={TYPE_TONE[d.type]}>{d.type}</Badge>
             <button
               aria-label="Remove deadline"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(deadlines.filter((x) => x.id !== d.id))}
             >
               ✕

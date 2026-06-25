@@ -43,7 +43,7 @@ export function StudyLog({
             <span className="text-xs text-ink-faint">{s.durationMinutes} min</span>
             <button
               aria-label="Remove session"
-              className="text-ink-faint opacity-0 transition-opacity hover:text-pink group-hover:opacity-100"
+              className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"
               onClick={() => onChange(sessions.filter((x) => x.id !== s.id))}
             >
               ✕
