@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Life, in view
 
-## Getting Started
+A personal life dashboard — Next.js 14 App Router, Neon Postgres, deployed on Vercel.
 
-First, run the development server:
+## Views
+
+- **Week** — weekly focus + sub-goals, task checklist (confetti + Web Audio pop on check-off)
+- **Gym** — weekly consistency score, 13-week history chart
+- **Georgia Tech** — current courses, deadlines, study log, MS CS (NLP concentration) degree progress
+- **Quarterly Goals** — goals by category (Finance, Health, Career, Personal, Content Creation), parking lot
+- **Bucket List** — categorized items, progress bar, completion dates
+- **Content Creation** — calendar, ideas pipeline, brand deals, quarterly content goals, posting consistency/streaks
+
+## Data model
+
+All dashboard data lives as a single JSON blob per user in one Postgres table (`dashboard`), so adding a feature never requires a schema migration. See `lib/types.ts` and `lib/defaultData.ts`.
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires a `DATABASE_URL` env var pointing at a Postgres database with the `dashboard` table created (see `lib/db.ts` for the schema). Run `vercel env pull` if this project is already linked to Vercel.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `GET /api/data`, `PUT /api/data` — load/save the full dashboard blob
+- `GET /api/briefing` — formatted morning briefing (tasks, weekly focus, upcoming GT/content deadlines, quarterly-goals tie-in). See `cowork-morning-briefing-prompt.md` for the Cowork scheduled-task prompt that consumes it.
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Connected to Vercel with auto-deploy on push to `main`; Neon Postgres is provisioned via the Vercel Neon integration.
