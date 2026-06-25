@@ -9,8 +9,6 @@ export interface BriefingDeadline {
 
 export interface BriefingPayload {
   weekRangeLabel: string;
-  focusTitle: string | null;
-  focusSubGoals: string[];
   openTasks: { id: string; text: string }[];
   gtDeadlines: BriefingDeadline[];
   contentDeadlines: BriefingDeadline[];
@@ -28,8 +26,6 @@ function daysUntilLabel(n: number): string {
 export function buildBriefing(data: DashboardData): BriefingPayload {
   const weekKey = currentWeekKey();
   const week = data.weeks[weekKey];
-  const focusTitle = week?.focus?.title || null;
-  const focusSubGoals = week?.focus?.subGoals ?? [];
   const openTasks = (week?.tasks ?? []).filter((t) => !t.done).map((t) => ({ id: t.id, text: t.text }));
 
   const courseNameById = new Map(data.gatech.courses.map((c) => [c.id, c.name]));
@@ -53,12 +49,10 @@ export function buildBriefing(data: DashboardData): BriefingPayload {
 
   const quarterKey = currentQuarterKey();
   const quarterGoals = data.quarterlyGoals.quarters[quarterKey];
-  const motivationalTieIn = buildMotivationalTieIn(quarterGoals, focusTitle);
+  const motivationalTieIn = buildMotivationalTieIn(quarterGoals);
 
   const text = formatBriefingText({
     weekRangeLabel: weekRangeLabel(weekKey),
-    focusTitle,
-    focusSubGoals,
     openTasks,
     gtDeadlines,
     contentDeadlines,
@@ -67,8 +61,6 @@ export function buildBriefing(data: DashboardData): BriefingPayload {
 
   return {
     weekRangeLabel: weekRangeLabel(weekKey),
-    focusTitle,
-    focusSubGoals,
     openTasks,
     gtDeadlines,
     contentDeadlines,
@@ -78,10 +70,7 @@ export function buildBriefing(data: DashboardData): BriefingPayload {
   };
 }
 
-function buildMotivationalTieIn(
-  quarterGoals: DashboardData["quarterlyGoals"]["quarters"][string] | undefined,
-  focusTitle: string | null
-): string {
+function buildMotivationalTieIn(quarterGoals: DashboardData["quarterlyGoals"]["quarters"][string] | undefined): string {
   if (!quarterGoals) {
     return "Every task today is a small deposit toward the bigger picture you're building this quarter — keep stacking them up. 🌱";
   }
@@ -93,14 +82,11 @@ function buildMotivationalTieIn(
   }
   const sample = incomplete.slice(0, 2);
   const categories = Array.from(new Set(sample.map((g) => g.category)));
-  const focusLine = focusTitle ? `Today's focus on "${focusTitle}" feeds directly into that.` : "";
-  return `Remember, this all ladders up to your ${categories.join(" and ")} goals this quarter — especially "${sample[0].text}". ${focusLine} Small, steady progress today is what makes the bigger picture feel inevitable rather than far away. 💪`;
+  return `Remember, this all ladders up to your ${categories.join(" and ")} goals this quarter — especially "${sample[0].text}". Small, steady progress today is what makes the bigger picture feel inevitable rather than far away. 💪`;
 }
 
 function formatBriefingText(input: {
   weekRangeLabel: string;
-  focusTitle: string | null;
-  focusSubGoals: string[];
   openTasks: { id: string; text: string }[];
   gtDeadlines: BriefingDeadline[];
   contentDeadlines: BriefingDeadline[];
@@ -109,14 +95,6 @@ function formatBriefingText(input: {
   const lines: string[] = [];
   lines.push(`Good morning! ☀️ Here's your briefing for the week of ${input.weekRangeLabel}.`);
   lines.push("");
-
-  if (input.focusTitle) {
-    lines.push(`🎯 *This week's focus:* ${input.focusTitle}`);
-    if (input.focusSubGoals.length > 0) {
-      input.focusSubGoals.forEach((g) => lines.push(`   • ${g}`));
-    }
-    lines.push("");
-  }
 
   lines.push("✅ *Today's open tasks:*");
   if (input.openTasks.length === 0) {

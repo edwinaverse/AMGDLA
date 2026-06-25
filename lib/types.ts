@@ -4,6 +4,7 @@ export interface Subtask {
   id: Id;
   text: string;
   done: boolean;
+  completedAt: string | null; // ISO date (yyyy-MM-dd) when marked done
 }
 
 export interface Task {
@@ -12,6 +13,8 @@ export interface Task {
   done: boolean;
   starred: boolean;
   subtasks: Subtask[];
+  goalCategory: GoalCategoryName | null;
+  completedAt: string | null; // ISO date (yyyy-MM-dd) when marked done
 }
 
 export interface WeekFocus {

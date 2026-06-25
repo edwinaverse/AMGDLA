@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useDashboard } from "@/components/DashboardProvider";
-import { FocusCard } from "@/components/week/FocusCard";
 import { TaskList } from "@/components/week/TaskList";
+import { WeekSummaryCard } from "@/components/week/WeekSummaryCard";
 import { currentWeekKey, shiftWeekKey, weekRangeLabel } from "@/lib/weekUtils";
+import { buildWeekSummary } from "@/lib/weekSummary";
 import { WeekEntry } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 
@@ -37,7 +38,7 @@ export default function WeekPage() {
         </div>
       </div>
 
-      <FocusCard focus={week.focus} onChange={(focus) => setWeek({ ...week, focus })} />
+      <WeekSummaryCard summary={buildWeekSummary(data, weekKey)} />
       <TaskList tasks={week.tasks} onChange={(tasks) => setWeek({ ...week, tasks })} />
     </div>
   );

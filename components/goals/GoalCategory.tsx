@@ -10,10 +10,12 @@ import { newId } from "@/lib/id";
 export function GoalCategory({
   title,
   goals,
+  tasksCompleted,
   onChange,
 }: {
   title: string;
   goals: Goal[];
+  tasksCompleted: number;
   onChange: (goals: Goal[]) => void;
 }) {
   const [newGoal, setNewGoal] = useState("");
@@ -27,7 +29,13 @@ export function GoalCategory({
 
   return (
     <Card>
-      <SectionHeader subtitle={`${completed} of ${goals.length} completed`}>{title}</SectionHeader>
+      <SectionHeader
+        subtitle={`${completed} of ${goals.length} completed · ${tasksCompleted} task${
+          tasksCompleted === 1 ? "" : "s"
+        } logged this quarter`}
+      >
+        {title}
+      </SectionHeader>
       <div className="space-y-1.5">
         {goals.map((g) => (
           <div key={g.id} className="group flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-white/[0.03]">

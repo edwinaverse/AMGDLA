@@ -1,4 +1,4 @@
-import { DashboardData, DegreeCourse, Task, WeekEntry } from "./types";
+import { DashboardData, DegreeCourse, Subtask, Task, WeekEntry } from "./types";
 
 /**
  * Best-effort starter list for the MS CS (NLP concentration) degree progress view.
@@ -57,14 +57,26 @@ export function createDefaultData(): DashboardData {
   };
 }
 
-/** Backfills fields added to Task after some weeks were already saved (starred, subtasks). */
+/** Backfills fields added to Subtask after some weeks were already saved (completedAt). */
+function normalizeSubtask(subtask: Partial<Subtask>): Subtask {
+  return {
+    id: subtask.id ?? "",
+    text: subtask.text ?? "",
+    done: subtask.done ?? false,
+    completedAt: subtask.completedAt ?? null,
+  };
+}
+
+/** Backfills fields added to Task after some weeks were already saved (starred, subtasks, goalCategory, completedAt). */
 function normalizeTask(task: Partial<Task>): Task {
   return {
     id: task.id ?? "",
     text: task.text ?? "",
     done: task.done ?? false,
     starred: task.starred ?? false,
-    subtasks: task.subtasks ?? [],
+    subtasks: (task.subtasks ?? []).map(normalizeSubtask),
+    goalCategory: task.goalCategory ?? null,
+    completedAt: task.completedAt ?? null,
   };
 }
 

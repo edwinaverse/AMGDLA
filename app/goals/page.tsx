@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { useDashboard } from "@/components/DashboardProvider";
 import { GoalCategory } from "@/components/goals/GoalCategory";
+import { GoalProgressChart } from "@/components/goals/GoalProgressChart";
 import { ParkingLot } from "@/components/goals/ParkingLot";
 import { Button } from "@/components/ui/Button";
 import { currentQuarterKey, shiftQuarterKey } from "@/lib/weekUtils";
 import { EMPTY_QUARTER_GOALS } from "@/lib/defaultData";
+import { GOAL_CATEGORIES } from "@/lib/goalCategories";
+import { completedCountForCategory, dailyCompletionSeries } from "@/lib/goalProgress";
 import { GoalCategoryName, QuarterGoals } from "@/lib/types";
-
-const CATEGORIES: GoalCategoryName[] = ["Finance", "Health", "Career", "Personal", "Content Creation"];
 
 export default function GoalsPage() {
   const { data, update, loading } = useDashboard();
@@ -46,11 +47,12 @@ export default function GoalsPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {CATEGORIES.map((category) => (
+        {GOAL_CATEGORIES.map((category) => (
           <GoalCategory
             key={category}
             title={category}
             goals={quarter[category]}
+            tasksCompleted={completedCountForCategory(data, quarterKey, category)}
             onChange={(goals) => setCategoryGoals(category, goals)}
           />
         ))}
@@ -62,6 +64,8 @@ export default function GoalsPage() {
           update((draft) => ({ ...draft, quarterlyGoals: { ...draft.quarterlyGoals, parkingLot } }))
         }
       />
+
+      <GoalProgressChart points={dailyCompletionSeries(data, quarterKey)} />
     </div>
   );
 }

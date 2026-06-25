@@ -4,8 +4,10 @@ import { useRef, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
-import { Task } from "@/lib/types";
+import { GoalCategoryName, Task } from "@/lib/types";
 import { newId } from "@/lib/id";
+import { todayIso } from "@/lib/weekUtils";
+import { GOAL_CATEGORIES, goalCategoryBadgeStyle, goalHashtag } from "@/lib/goalCategories";
 import { useConfetti } from "./useConfetti";
 import { usePopSound } from "./usePopSound";
 
@@ -20,7 +22,10 @@ export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks:
 
   function addTask() {
     if (!newTask.trim()) return;
-    onChange([...tasks, { id: newId(), text: newTask.trim(), done: false, starred: false, subtasks: [] }]);
+    onChange([
+      ...tasks,
+      { id: newId(), text: newTask.trim(), done: false, starred: false, subtasks: [], goalCategory: null, completedAt: null },
+    ]);
     setNewTask("");
   }
 
@@ -30,8 +35,18 @@ export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks:
 
   function toggleTask(id: string) {
     const task = tasks.find((t) => t.id === id);
-    updateTask(id, { done: !task?.done });
-    if (task && !task.done) {
+    if (!task) return;
+    const nextDone = !task.done;
+    const today = todayIso();
+    updateTask(id, {
+      done: nextDone,
+      completedAt: nextDone ? today : null,
+      // Completing a task auto-completes any subtasks still open.
+      subtasks: nextDone
+        ? task.subtasks.map((s) => (s.done ? s : { ...s, done: true, completedAt: today }))
+        : task.subtasks,
+    });
+    if (nextDone) {
       fireConfetti(rowRefs.current[id]);
       playPop();
     }
@@ -46,7 +61,7 @@ export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks:
     if (!text) return;
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
-    updateTask(taskId, { subtasks: [...task.subtasks, { id: newId(), text, done: false }] });
+    updateTask(taskId, { subtasks: [...task.subtasks, { id: newId(), text, done: false, completedAt: null }] });
     setSubtaskDrafts((prev) => ({ ...prev, [taskId]: "" }));
   }
 
@@ -54,7 +69,11 @@ export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks:
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
     updateTask(taskId, {
-      subtasks: task.subtasks.map((s) => (s.id === subtaskId ? { ...s, done: !s.done } : s)),
+      subtasks: task.subtasks.map((s) => {
+        if (s.id !== subtaskId) return s;
+        const nextDone = !s.done;
+        return { ...s, done: nextDone, completedAt: nextDone ? todayIso() : null };
+      }),
     });
   }
 
@@ -102,6 +121,22 @@ export function TaskList({ tasks, onChange }: { tasks: Task[]; onChange: (tasks:
               <span className={`flex-1 text-sm ${task.done ? "text-ink-faint line-through" : "text-ink"}`}>
                 {task.text}
               </span>
+              <select
+                aria-label="Tag with a goal"
+                className="rounded-full border bg-transparent px-2 py-0.5 text-[10px] font-medium outline-none transition"
+                style={goalCategoryBadgeStyle(task.goalCategory)}
+                value={task.goalCategory ?? ""}
+                onChange={(e) =>
+                  updateTask(task.id, { goalCategory: (e.target.value || null) as GoalCategoryName | null })
+                }
+              >
+                <option value="">+ tag</option>
+                {GOAL_CATEGORIES.map((category) => (
+                  <option key={category} value={category}>
+                    {goalHashtag(category)}
+                  </option>
+                ))}
+              </select>
               <button
                 aria-label="Delete task"
                 className="text-ink-faint opacity-0 transition-opacity hover:text-sage group-hover:opacity-100"

@@ -39,6 +39,15 @@ export function currentQuarterKey(): string {
   return quarterKeyFor(new Date());
 }
 
+export function quarterDateRange(quarterKey: string): { start: Date; end: Date } {
+  const [yearStr, qStr] = quarterKey.split("-Q");
+  const year = Number(yearStr);
+  const q = Number(qStr);
+  const start = new Date(year, (q - 1) * 3, 1);
+  const end = new Date(year, q * 3, 0);
+  return { start, end };
+}
+
 export function shiftQuarterKey(quarterKey: string, delta: number): string {
   const [yearStr, qStr] = quarterKey.split("-Q");
   let year = Number(yearStr);
